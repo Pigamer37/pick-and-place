@@ -5,8 +5,5 @@ description = "Pick and place task with RoboDK and Universal Robots"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "urrtde",
+    "robodk>=5.9.2",
 ]
-
-[tool.uv.sources]
-urrtde = { git = "https://github.com/UniversalRobots/RTDE_Python_Client_Library.git", rev = "v2.7.12" }
