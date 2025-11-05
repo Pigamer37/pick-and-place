@@ -4,19 +4,20 @@ from robodk import robolink
 
 # Frame names to load from RoboDK
 FRAME_NAMES = [
-    'Suelo',
-    'Mesa',
+    'Ground',
+    'Table',
     'Base Frame',
     'workframe',
     'UR3e Base',
-    'Pieza1',
-    'Pieza2',
-    'Pieza3',
-    'Pieza4'
+    'Block1',
+    'Block2',
+    'Block3',
+    'Block4',
+    'Gripper'
 ]
 
 # Target names to load from RoboDK
-TARGET_NAMES = ['Home', 'Aprox1', 'Block1']
+TARGET_NAMES = ['Home', 'Aprox1', 'Block1', 'Close', 'Open']
 
 
 def read_frames(rdk: robolink.Robolink, frame_names: List[str]) -> Dict[str, robolink.Item]:
@@ -78,6 +79,7 @@ if __name__ == '__main__':
     # Connect to RoboDK
     RDK = robolink.Robolink()
 
+    # Get UR3e as a robot
     robot = RDK.Item('UR3e', robolink.ITEM_TYPE_ROBOT)
 
     if not robot.Valid():
@@ -89,8 +91,20 @@ if __name__ == '__main__':
     frames = read_frames(RDK, FRAME_NAMES)
     targets = read_targets(RDK, TARGET_NAMES)
 
+    # Get gripper as a robot
+    gripper = RDK.Item('Zimmer HRC-03 Gripper', robolink.ITEM_TYPE_ROBOT)
+    if not gripper.Valid():
+        raise ValueError("Gripper 'Zimmer HRC-03 Gripper' not found")
+
     # === INITIALIZATION ===
     print("\n=== INITIALIZATION ===")
+
+    # Open gripper
+    print("Opening gripper...")
+    gripper.MoveJ(targets['Open'])
+    print("✅ Gripper opened")
+
+    # Move robot to home
     print("Moving to Home position (from wherever the robot is)...")
     robot.setSpeedJoints(10)  # degrees/s
     robot.setAccelerationJoints(5)  # degrees/s²
@@ -113,5 +127,10 @@ if __name__ == '__main__':
     robot.setAcceleration(5)  # mm/s²
     robot.MoveL(targets['Block1'])
     print("   ✅ Reached Block1")
+
+    # 3. Close gripper to grab block
+    print("\n3. Closing gripper to grab block...")
+    gripper.MoveJ(targets['Close'])
+    print("   ✅ Gripper closed - Block grabbed")
 
     print("\n=== Trajectory Complete ===")
