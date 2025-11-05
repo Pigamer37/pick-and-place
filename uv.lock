@@ -1,0 +1,19 @@
+version = 1
+revision = 3
+requires-python = ">=3.13"
+
+[[package]]
+name = "robodk-pick-and-place"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "urrtde" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "urrtde", git = "https://github.com/UniversalRobots/RTDE_Python_Client_Library.git?rev=v2.7.12" }]
+
+[[package]]
+name = "urrtde"
+version = "2.7.12"
+source = { git = "https://github.com/UniversalRobots/RTDE_Python_Client_Library.git?rev=v2.7.12#29f02eb0d5164b03a0a95dfd4f4f8645be12aa59" }
